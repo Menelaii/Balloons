@@ -136,4 +136,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 4900732491342091964}
   _renderer: {fileID: 5017130524543046210}
-  _explosion: {fileID: 9189724718556554496, guid: 591d661f6de9d2c48962d9a83723d12c, type: 3}
+  _explosionEffect: {fileID: 9189724718556554496, guid: 591d661f6de9d2c48962d9a83723d12c, type: 3}

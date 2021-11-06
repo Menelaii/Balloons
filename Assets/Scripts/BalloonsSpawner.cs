@@ -12,13 +12,15 @@ public class BalloonsSpawner : MonoBehaviour
     [SerializeField] private int _maxDamage;
     [SerializeField] private float _maxFallSpeed;
     [SerializeField] private float _minFallSpeed;
-    [SerializeField] private int _balloonsToIncreaseMinSpeed;
-    [Range(0,100)] [SerializeField] private int _increasePercent;
+    [SerializeField] private int _balloonsToIncreaseFallSpeed;
+    [Range(0, 100)] [SerializeField] private int _increasePercent;
 
     private int _spawnCount;
+    private float _currentMaxFallSpeed;
 
     private void Start()
     {
+        _currentMaxFallSpeed = _minFallSpeed;
         StartCoroutine(SpawnWith(_spawnDelay));
     }
 
@@ -29,10 +31,10 @@ public class BalloonsSpawner : MonoBehaviour
 
         var balloon = Instantiate(_template, spawnPosition, Quaternion.identity);
 
-        balloon.Init(_player, Random.Range(_minFallSpeed, _maxFallSpeed), Random.Range(0, _maxReward), Random.Range(0, _maxDamage), Random.ColorHSV());
+        balloon.Init(_player, Random.Range(_minFallSpeed, _currentMaxFallSpeed), Random.Range(0, _maxReward), Random.Range(0, _maxDamage), Random.ColorHSV());
 
         _spawnCount++;
-        TryIncreaseMinFallSpeed();
+        TryIncreaseCurrentMaxFallSpeed();
     }
 
     private IEnumerator SpawnWith(float delay)
@@ -45,11 +47,11 @@ public class BalloonsSpawner : MonoBehaviour
         }
     }
 
-    private void TryIncreaseMinFallSpeed()
+    private void TryIncreaseCurrentMaxFallSpeed()
     {
-        if(_spawnCount >= _balloonsToIncreaseMinSpeed)
+        if(_spawnCount >= _balloonsToIncreaseFallSpeed)
         {
-            _minFallSpeed = Mathf.Clamp(_minFallSpeed +  _minFallSpeed * _increasePercent / 100f, _minFallSpeed, _maxFallSpeed);
+            _currentMaxFallSpeed = Mathf.Clamp(_currentMaxFallSpeed +  _currentMaxFallSpeed * _increasePercent / 100f, _minFallSpeed, _maxFallSpeed);
             _spawnCount = 0;
         }
     }

@@ -7,7 +7,7 @@ public class ExplosionEffect : MonoBehaviour
 {
     [SerializeField] private ParticleSystem _particleSystem;
 
-    public void Init(Color color)
+    public void SetColor(Color color)
     {
         var main = _particleSystem.main;
         main.startColor = color;

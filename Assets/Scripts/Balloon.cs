@@ -8,7 +8,7 @@ public class Balloon : MonoBehaviour, IPointerDownHandler
 {
     [SerializeField] private Rigidbody2D _rigidbody;
     [SerializeField] private SpriteRenderer _renderer;
-    [SerializeField] private ExplosionEffect _explosion;
+    [SerializeField] private ExplosionEffect _explosionEffect;
 
     private float _fallSpeed;
     private int _reward;
@@ -17,12 +17,7 @@ public class Balloon : MonoBehaviour, IPointerDownHandler
 
     private void FixedUpdate()
     {
-        _rigidbody.velocity = Vector2.zero;
-
-        float gravityForceSpeed = Physics2D.gravity.y * Time.fixedDeltaTime;
-        float additionalSpeed = gravityForceSpeed - _fallSpeed;
-        float additionalForceMagnitude = _rigidbody.mass * additionalSpeed / Time.fixedDeltaTime;
-        _rigidbody.AddForce(Vector3.up * additionalForceMagnitude);
+        _rigidbody.velocity = Vector3.down * _fallSpeed * Time.fixedDeltaTime;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -54,8 +49,8 @@ public class Balloon : MonoBehaviour, IPointerDownHandler
 
     public void Pop()
     {
-        var explosion = Instantiate(_explosion, transform.position, Quaternion.identity);
-        explosion.Init(_renderer.color);
+        var explosionEffect = Instantiate(_explosionEffect, transform.position, Quaternion.identity);
+        explosionEffect.SetColor(_renderer.color);
 
         Destroy(gameObject);
     }
