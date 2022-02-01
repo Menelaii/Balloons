@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))]
 public class Balloon : MonoBehaviour, IPointerDownHandler
 {
     [SerializeField] private Rigidbody2D _rigidbody;
@@ -13,11 +11,13 @@ public class Balloon : MonoBehaviour, IPointerDownHandler
     private float _fallSpeed;
     private int _reward;
     private int _damage;
-    private Player _player;
 
-    private void FixedUpdate()
+    public event Action<Balloon, int> PopedByPlayer;
+    public event Action<Balloon, int> PopedByGround;
+
+    private void Start()
     {
-        _rigidbody.velocity = Vector3.down * _fallSpeed * Time.fixedDeltaTime;
+        _rigidbody.velocity = Vector3.down * _fallSpeed;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -25,13 +25,12 @@ public class Balloon : MonoBehaviour, IPointerDownHandler
         if (collision.transform.TryGetComponent<Ground>(out Ground ground))
         {
             Pop();
-            _player.TakeDamage(_damage);
+            PopedByGround?.Invoke(this, _damage);
         }
     }
 
-    public void Init(Player player, float fallSpeed, int reward, int damage, Color color)
+    public void Init(float fallSpeed, int reward, int damage, Color color)
     {
-        _player = player;
         _fallSpeed = fallSpeed;
         _reward = reward;
         _damage = damage;
@@ -44,7 +43,7 @@ public class Balloon : MonoBehaviour, IPointerDownHandler
             return;
 
         Pop();
-        _player.TakeReward(_reward);
+        PopedByPlayer?.Invoke(this, _reward);
     }
 
     public void Pop()
